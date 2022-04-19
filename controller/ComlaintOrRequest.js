@@ -1,6 +1,7 @@
 import ComplaintOrRequest from "../model/ComplaintOrRequest.js";
 import Supervisor from "../model/Supervisor.js";
-import sendSMS from "../methods/TwilioSMS.js";
+// import sendSMS from "../methods/TwilioSMS.js";
+import sendFastTwoFastSMS from "../methods/FastTwoSms.js";
 
 ///////////////// Add Complaint ////////////////////
 
@@ -34,9 +35,9 @@ export const AddComplaintOrRequest = async (req, res) => {
 
     if (!supervisorNum) console.log("No Supervisor.");
     else
-      sendSMS(
+      sendFastTwoFastSMS(
         "Complaint or Request Arrived. Login and Take an Action.",
-        `+91${supervisorNum.mobile_no}`
+        supervisorNum.mobile_no
       );
   } else res.send("Something Went Wrong");
 };

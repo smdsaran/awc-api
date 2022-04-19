@@ -1,6 +1,6 @@
 import LeaveRequest from "../model/LeaveRequest.js";
 import mongoose from "mongoose";
-import sendSMS from "../methods/TwilioSMS.js";
+// import sendSMS from "../methods/TwilioSMS.js";
 import sendFastTwoFastSMS from "../methods/FastTwoSms.js";
 import Supervisor from "../model/Supervisor.js";
 
@@ -31,9 +31,9 @@ export const RequestLeave = async (req, res) => {
 
     if (!supervisorNum) console.log("No Supervisor.");
     else
-      sendSMS(
+      sendFastTwoFastSMS(
         "Leave Request Arrived. Login and Take an Action.",
-        `+91${supervisorNum.mobile_no}`
+        supervisorNum.mobile_no
       );
   } else res.send("Something Went Wrong");
 };

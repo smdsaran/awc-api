@@ -1,5 +1,6 @@
 import AnganwadiCenters from "../model/AnganwadiCenters.js";
-import sendSMS from "../methods/TwilioSMS.js";
+// import sendSMS from "../methods/TwilioSMS.js";
+import sendFastTwoFastSMS from "../methods/FastTwoSms.js";
 import mongoose from "mongoose";
 
 //////////////////////////////////  Add AWC //////////////////////////////////
@@ -474,9 +475,9 @@ export const addStockDetails = async (req, res) => {
 
     if (ret) {
       result.pregnantLadies.forEach((lady) => {
-        sendSMS(
+        sendFastTwoFastSMS(
           "Nutrition Supplements Arrived to Anganwadi Center. Come and Get Your Shares.",
-          `+91${lady.mobile_no}`
+          lady.mobile_no
         );
       });
     }
