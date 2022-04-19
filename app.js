@@ -28,6 +28,7 @@ app.use(compression());
 Logger();
 
 // startDebugger(`app: ${app.get("env")}`); /// process.env.NODE_ENV  .... Change NODE_ENV to change the development to production
+// https://awc-easy.herokuapp.com/
 
 app.use("/", Admin);
 app.use("/", AWC);
