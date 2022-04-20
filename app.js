@@ -30,6 +30,8 @@ Logger();
 // startDebugger(`app: ${app.get("env")}`); /// process.env.NODE_ENV  .... Change NODE_ENV to change the development to production
 // https://awc-easy.herokuapp.com/
 
+app.get("/favicon.ico", (req, res) => res.status(204));
+
 app.use("/", Admin);
 app.use("/", AWC);
 app.use("/", AWW);
