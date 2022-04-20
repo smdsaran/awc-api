@@ -1,4 +1,6 @@
 import Supervisors from "../model/Supervisor.js";
+import AnganwadiWorkers from "../model/AnganwadiWorkers.js";
+import sendFastTwoFastSMS from "../methods/FastTwoSms.js";
 import bcrypt from "bcrypt";
 const saltRounds = 10;
 import { generateAccessToken } from "../methods/Auth.js";
@@ -84,5 +86,24 @@ export const loginSupervisor = (req, res) => {
       res.status(401).send({ message: "HouseOwner Not registered." });
       // mongoose.connection.close();
     }
+  });
+};
+
+//////////////////////////////  Send Announcements to Awws   ///////////////////////////////////
+
+export const sendAnnoucementToAwws = async (req, res) => {
+  const { divisionCode, body } = req.body;
+
+  const results = await AnganwadiWorkers.find({
+    divisionCode: divisionCode,
+  }).select("mobile_no");
+
+  console.log(results);
+
+  if (!results) res.send("No Resipients Available.");
+  else res.send("Announcement Sent.");
+
+  results.forEach((result) => {
+    sendFastTwoFastSMS(body, result.mobile_no);
   });
 };
