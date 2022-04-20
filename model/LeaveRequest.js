@@ -20,6 +20,11 @@ const leaveRequestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
+  reason: {
+    type: String,
+    required: true,
+  },
 });
 
 const LeaveRequests = new mongoose.model("LeaveRequest", leaveRequestSchema);

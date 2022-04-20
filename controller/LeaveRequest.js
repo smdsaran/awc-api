@@ -7,7 +7,8 @@ import Supervisor from "../model/Supervisor.js";
 ////////////////////////////////////  Leave Request /////////////////////
 
 export const RequestLeave = async (req, res) => {
-  const { centerCode, divisionCode, workerName, workerNumber } = req.body;
+  const { centerCode, divisionCode, workerName, workerNumber, reason } =
+    req.body;
 
   console.log(req.body);
 
@@ -16,6 +17,7 @@ export const RequestLeave = async (req, res) => {
     divisionCode,
     workerName,
     workerNumber,
+    reason,
   });
 
   const result = await data.save();

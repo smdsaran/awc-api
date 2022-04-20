@@ -31,6 +31,7 @@ Logger();
 // https://awc-easy.herokuapp.com/
 
 app.get("/favicon.ico", (req, res) => res.status(204));
+// /images/icons/gear.png
 
 app.use("/", Admin);
 app.use("/", AWC);
