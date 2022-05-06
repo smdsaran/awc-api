@@ -458,11 +458,23 @@ export const addStockDetails = async (req, res) => {
 
   const data = {
     deliveryDate,
-    oilInLitre,
-    pulseInKg,
-    nutritionFlourInPacket,
-    eggInNum,
-    riceInKg,
+
+    delivered: {
+      oilInLitre,
+      pulseInKg,
+      nutritionFlourInPacket,
+      eggInNum,
+      riceInKg,
+    },
+
+    existing: {
+      oilInLitre: "",
+      pulseInKg: "",
+      nutritionFlourInPacket: "",
+      eggInNum: "",
+      riceInKg: "",
+    },
+
     billImage,
   };
 
@@ -488,6 +500,45 @@ export const addStockDetails = async (req, res) => {
   // const p_ladies = await AnganwadiCenters.find({ centerCode: centerCode }).select("pregnantLadies");
 };
 
+//////////////////////////////////////  Update Existing Stocks /////////////////////////////////////
+
+export const existingStockDetails = async (req, res) => {
+  const {
+    centerCode,
+    oilInLitre,
+    pulseInKg,
+    nutritionFlourInPacket,
+    eggInNum,
+    riceInKg,
+  } = req.body;
+
+  const ret = await AnganwadiCenters.find({ centerCode: centerCode }).select(
+    "stocksInfo"
+  );
+
+  console.log(ret);
+
+  let len = ret.length;
+
+  let id = ret[len - 1]._id;
+
+  const query = {
+    centerCode: centerCode,
+    "stocksInfo._id": id,
+  };
+
+  const result = await AnganwadiCenters.updateOne(query, {
+    $set: {
+      "stocksInfo.$.existing.$.oilInLitre": oilInLitre,
+      "stocksInfo.$.existing.$.pulseInKg": pulseInKg,
+      "stocksInfo.$.existing.$.nutritionFlourInPacket": nutritionFlourInPacket,
+      "stocksInfo.$.existing.$.eggInNum": eggInNum,
+      "stocksInfo.$.existing.$.riceInKg": riceInKg,
+    },
+  });
+
+  result ? res.send("Updated Sucessfully.") : res.send("Something Wrong");
+};
 /////////////////////////////////////   Read Stock Details  ////////////////////////////////////////////////
 
 export const ReadStockDetails = async (req, res) => {
@@ -497,7 +548,11 @@ export const ReadStockDetails = async (req, res) => {
     "stocksInfo"
   );
 
-  result ? res.send(result) : res.send("Something Wrong");
+  console.log(result);
+
+  let len = result.length;
+
+  result ? res.send(result[len - 1]) : res.send("Something Wrong");
 };
 
 //////////////////////////////////////////////////    Add Study Material ///////////////////////////////////////////

@@ -1,6 +1,8 @@
 import express from "express";
 var router = express.Router();
 
+import upload from "../methods/Multer.js";
+
 import {
   AllAWC,
   addAWC,
@@ -19,6 +21,7 @@ import {
   attendanceEntry,
   ReadAttendanceEntry,
   addStockDetails,
+  existingStockDetails,
   ReadStockDetails,
   AddStudyMaterial,
   ReadStudyMaterials,
@@ -45,7 +48,8 @@ router.delete("/delete-plady", DeletePregnantLady);
 router.post("/attendanceEntry", attendanceEntry);
 router.get("/view-attendance/:centerCode", ReadAttendanceEntry);
 
-router.post("/addStockDetails", addStockDetails);
+router.post("/addStockDetails", upload.single("photo"), addStockDetails);
+router.post("/existingStockDetails", existingStockDetails);
 router.get("/view-stocks/:centerCode", ReadStockDetails);
 
 router.post("/addStudyMaterials", AddStudyMaterial);
