@@ -189,66 +189,62 @@ const anganwadiCentersSchema = new mongoose.Schema({
     {
       deliveryDate: {
         type: String,
-        required: true,
       },
 
       delivered: {
+        type: {
+          type: String,
+        },
+
         oilInLitre: {
           type: String,
-          required: true,
         },
 
         pulseInKg: {
           type: String,
-          required: true,
         },
 
         nutritionFlourInPacket: {
           type: String,
-          required: true,
         },
 
         eggInNum: {
           type: String,
-          required: true,
         },
 
         riceInKg: {
           type: String,
-          required: true,
+        },
+
+        billImage: {
+          type: String,
         },
       },
 
       existing: {
+        type: {
+          type: String,
+        },
+
         oilInLitre: {
           type: String,
-          required: true,
         },
 
         pulseInKg: {
           type: String,
-          required: true,
         },
 
         nutritionFlourInPacket: {
           type: String,
-          required: true,
         },
 
         eggInNum: {
           type: String,
-          required: true,
         },
 
         riceInKg: {
           type: String,
-          required: true,
         },
-      },
-
-      billImage: {
-        type: String,
-        required: true,
       },
     },
   ],

@@ -9,7 +9,7 @@ export const addAWC = async (req, res) => {
   const { centerCode, divisionCode, pincode, cityOrVillage, district, state } =
     req.body;
 
-  const found = await AnganwadiCenters.find({ centerCode: centerCode });
+  const found = await AnganwadiCenters.findOne({ centerCode: centerCode });
 
   if (!found) {
     const data = new AnganwadiCenters({
@@ -454,7 +454,7 @@ export const addStockDetails = async (req, res) => {
 
   const deliveryDate = new Date().toLocaleDateString();
 
-  const billImage = req.file;
+  const billImage = req.file.originalname;
 
   const data = {
     deliveryDate,
@@ -465,6 +465,7 @@ export const addStockDetails = async (req, res) => {
       nutritionFlourInPacket,
       eggInNum,
       riceInKg,
+      billImage,
     },
 
     existing: {
@@ -474,16 +475,14 @@ export const addStockDetails = async (req, res) => {
       eggInNum: "",
       riceInKg: "",
     },
-
-    billImage,
   };
 
-  const result = await AnganwadiCenters.find({ centerCode: centerCode });
+  const result = await AnganwadiCenters.findOne({ centerCode: centerCode });
 
   if (result) {
     result.stocksInfo.push(data);
     const ret = await result.save();
-    res.send(ret);
+    res.send("Stock Details Added.");
 
     if (ret) {
       result.pregnantLadies.forEach((lady) => {
