@@ -410,6 +410,8 @@ export const DeletePregnantLady = async (req, res) => {
 export const attendanceEntry = async (req, res) => {
   const { attendance, centerCode } = req.body; //it should be array with name and present
 
+  console.log(attendance);
+
   const today = new Date().toLocaleDateString();
 
   const data = {
@@ -422,7 +424,7 @@ export const attendanceEntry = async (req, res) => {
   if (result) {
     result.attendanceEntry.push(data);
     const ret = await result.save();
-    res.send(ret);
+    res.send("Attendance Recorded.");
   } else {
     res.send("No AWC Available.");
   }
@@ -431,13 +433,30 @@ export const attendanceEntry = async (req, res) => {
 ////////////////////////////////////  Read Attendance Entry ///////////////////////////
 
 export const ReadAttendanceEntry = async (req, res) => {
-  const { centerCode } = req.params;
+  const { centerCode, days } = req.params;
 
-  const result = await AnganwadiCenters.find({ centerCode: centerCode }).select(
-    "attendanceEntry"
-  );
+  console.log(days);
 
-  result ? res.send(result) : res.send("Something Wrong");
+  let limit;
+
+  if (days === "today") limit = 1;
+  else if (days === "Last Week") limit = 7;
+  else if (days === "Last Month") limit = 31;
+  else if (days === "Last 3 Months") limit = 90;
+  else limit = 365;
+
+  const result = await AnganwadiCenters.find({ centerCode: centerCode })
+    .select("attendanceEntry")
+    .sort({ _id: -1 });
+  // .limit(limit);
+
+  // console.log(result[0]);
+
+  let ans = result[0].attendanceEntry.reverse();
+
+  let filteredData = ans.slice(0, limit);
+
+  result ? res.send(filteredData) : res.send("Something Wrong");
 };
 
 //////////////////////////////////// Add Stock Details ////////////////////////////////
@@ -511,15 +530,15 @@ export const existingStockDetails = async (req, res) => {
     riceInKg,
   } = req.body;
 
-  const ret = await AnganwadiCenters.find({ centerCode: centerCode }).select(
+  const ret = await AnganwadiCenters.findOne({ centerCode: centerCode }).select(
     "stocksInfo"
   );
 
   console.log(ret);
 
-  let len = ret.length;
+  let len = ret.stocksInfo.length;
 
-  let id = ret[len - 1]._id;
+  let id = ret.stocksInfo[len - 1]._id;
 
   const query = {
     centerCode: centerCode,
@@ -528,11 +547,11 @@ export const existingStockDetails = async (req, res) => {
 
   const result = await AnganwadiCenters.updateOne(query, {
     $set: {
-      "stocksInfo.$.existing.$.oilInLitre": oilInLitre,
-      "stocksInfo.$.existing.$.pulseInKg": pulseInKg,
-      "stocksInfo.$.existing.$.nutritionFlourInPacket": nutritionFlourInPacket,
-      "stocksInfo.$.existing.$.eggInNum": eggInNum,
-      "stocksInfo.$.existing.$.riceInKg": riceInKg,
+      "stocksInfo.$.existing.oilInLitre": oilInLitre,
+      "stocksInfo.$.existing.pulseInKg": pulseInKg,
+      "stocksInfo.$.existing.nutritionFlourInPacket": nutritionFlourInPacket,
+      "stocksInfo.$.existing.eggInNum": eggInNum,
+      "stocksInfo.$.existing.riceInKg": riceInKg,
     },
   });
 
@@ -543,15 +562,17 @@ export const existingStockDetails = async (req, res) => {
 export const ReadStockDetails = async (req, res) => {
   const { centerCode } = req.params;
 
-  const result = await AnganwadiCenters.find({ centerCode: centerCode }).select(
-    "stocksInfo"
-  );
+  console.log(centerCode);
+
+  const result = await AnganwadiCenters.findOne({
+    centerCode: centerCode,
+  }).select("stocksInfo");
 
   console.log(result);
 
-  let len = result.length;
+  let len = result.stocksInfo.length;
 
-  result ? res.send(result[len - 1]) : res.send("Something Wrong");
+  result ? res.send(result.stocksInfo[len - 1]) : res.send("Something Wrong");
 };
 
 //////////////////////////////////////////////////    Add Study Material ///////////////////////////////////////////

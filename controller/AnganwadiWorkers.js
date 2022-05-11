@@ -131,3 +131,15 @@ export const sendAnnouncement = async (req, res) => {
     sendFastTwoFastSMS(body, lady.mobile_no);
   });
 };
+
+////////////////////////////////   Read AWWs   /////////////////////////////////////////
+
+export const readAWWs = async (req, res) => {
+  const { centerCode } = req.params;
+
+  const result = await AnganwadiWorkers.find({ centerCode: centerCode }).select(
+    "name"
+  );
+
+  result ? res.send(result) : res.send("No AWW Available");
+};

@@ -46,7 +46,7 @@ router.get("/get-plady/:centerCode/:id", ReadSinglePregnantLadie);
 router.delete("/delete-plady", DeletePregnantLady);
 
 router.post("/attendanceEntry", attendanceEntry);
-router.get("/view-attendance/:centerCode", ReadAttendanceEntry);
+router.get("/view-attendance/:centerCode/:days", ReadAttendanceEntry);
 
 router.post("/addStockDetails", upload.single("photo"), addStockDetails);
 router.post("/existingStockDetails", existingStockDetails);
