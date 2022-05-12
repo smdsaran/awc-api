@@ -412,10 +412,19 @@ export const attendanceEntry = async (req, res) => {
 
   console.log(attendance);
 
-  const today = new Date().toLocaleDateString();
+  // const today = new Date().toLocaleDateString();
+
+  const date = new Date();
+  const formattedDate = date
+    .toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    })
+    .replace(/ /g, "-");
 
   const data = {
-    date: today,
+    date: formattedDate,
     attendance: attendance,
   };
 
@@ -471,12 +480,21 @@ export const addStockDetails = async (req, res) => {
     riceInKg,
   } = req.body;
 
-  const deliveryDate = new Date().toLocaleDateString();
+  // const deliveryDate = new Date().toLocaleDateString();
+
+  const date = new Date();
+  const formattedDate = date
+    .toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    })
+    .replace(/ /g, "-");
 
   const billImage = req.file.originalname;
 
   const data = {
-    deliveryDate,
+    deliveryDate: formattedDate,
 
     delivered: {
       oilInLitre,
