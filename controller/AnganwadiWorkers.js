@@ -6,6 +6,7 @@ import { generateAccessToken } from "../methods/Auth.js";
 import debug from "debug";
 const adminDebugger = debug("app:admin");
 import sendFastTwoFastSMS from "../methods/FastTwoSms.js";
+import decrypt from "../methods/Crypto.js";
 ///////////////////////  Add AWW //////////////////////
 
 export const AddAWW = async (req, res) => {
@@ -118,6 +119,10 @@ export const getMobNum = async (req, res) => {
 export const sendAnnouncement = async (req, res) => {
   const { centerCode, body } = req.body;
 
+  console.log(body);
+
+  let encryptedText = decrypt(body);
+
   const result = await AnganwadiCenters.findOne({
     centerCode: centerCode,
   }).select("pregnantLadies");
@@ -128,7 +133,7 @@ export const sendAnnouncement = async (req, res) => {
   else res.send("No Resipients Available.");
 
   result.pregnantLadies.forEach((lady) => {
-    sendFastTwoFastSMS(body, lady.mobile_no);
+    sendFastTwoFastSMS(encryptedText, lady.mobile_no);
   });
 };
 

@@ -6,6 +6,7 @@ const saltRounds = 10;
 import { generateAccessToken } from "../methods/Auth.js";
 import debug from "debug";
 const adminDebugger = debug("app:admin");
+import decrypt from "../methods/Crypto.js";
 
 ///////////////////////  Add AWW //////////////////////
 
@@ -94,6 +95,12 @@ export const loginSupervisor = (req, res) => {
 export const sendAnnoucementToAwws = async (req, res) => {
   const { divisionCode, body } = req.body;
 
+  console.log(body);
+
+  let encryptedText = decrypt(body);
+
+  // console.log(encryptedText);
+
   const results = await AnganwadiWorkers.find({
     divisionCode: divisionCode,
   }).select("mobile_no");
@@ -104,6 +111,6 @@ export const sendAnnoucementToAwws = async (req, res) => {
   else res.send("Announcement Sent.");
 
   results.forEach((result) => {
-    sendFastTwoFastSMS(body, result.mobile_no);
+    sendFastTwoFastSMS(encryptedText, result.mobile_no);
   });
 };
