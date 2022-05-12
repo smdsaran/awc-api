@@ -97,7 +97,7 @@ export const sendAnnoucementToAwws = async (req, res) => {
 
   console.log(body);
 
-  let encryptedText = decrypt(body);
+  const encryptedText = decrypt(body);
 
   console.log(encryptedText);
 
