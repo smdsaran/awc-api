@@ -121,9 +121,9 @@ export const sendAnnouncement = async (req, res) => {
 
   console.log(body);
 
-  const encryptedText = decrypt(body);
+  // const encryptedText = decrypt(body);
 
-  console.log(encryptedText);
+  // console.log(encryptedText);
 
   const result = await AnganwadiCenters.findOne({
     centerCode: centerCode,
@@ -135,7 +135,7 @@ export const sendAnnouncement = async (req, res) => {
   else res.send("No Resipients Available.");
 
   result.pregnantLadies.forEach((lady) => {
-    sendFastTwoFastSMS(encryptedText, lady.mobile_no);
+    sendFastTwoFastSMS(decrypt(body), lady.mobile_no);
   });
 };
 

@@ -97,9 +97,9 @@ export const sendAnnoucementToAwws = async (req, res) => {
 
   console.log(body);
 
-  const encryptedText = decrypt(body);
+  // const encryptedText = decrypt(body);
 
-  console.log(encryptedText);
+  // console.log(encryptedText);
 
   const results = await AnganwadiWorkers.find({
     divisionCode: divisionCode,
@@ -111,6 +111,6 @@ export const sendAnnoucementToAwws = async (req, res) => {
   else res.send("Announcement Sent.");
 
   results.forEach((result) => {
-    sendFastTwoFastSMS(encryptedText, result.mobile_no);
+    sendFastTwoFastSMS(decrypt(body), result.mobile_no);
   });
 };
