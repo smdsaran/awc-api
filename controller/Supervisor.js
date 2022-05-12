@@ -99,7 +99,7 @@ export const sendAnnoucementToAwws = async (req, res) => {
 
   let encryptedText = decrypt(body);
 
-  // console.log(encryptedText);
+  console.log(encryptedText);
 
   const results = await AnganwadiWorkers.find({
     divisionCode: divisionCode,

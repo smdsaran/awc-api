@@ -123,6 +123,8 @@ export const sendAnnouncement = async (req, res) => {
 
   let encryptedText = decrypt(body);
 
+  console.log(encryptedText);
+
   const result = await AnganwadiCenters.findOne({
     centerCode: centerCode,
   }).select("pregnantLadies");
