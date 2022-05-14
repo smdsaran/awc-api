@@ -1,5 +1,6 @@
 import express from "express";
 var router = express.Router();
+import limiter from "../methods/RateLimit.js";
 
 import {
   AddSupervisor,
@@ -9,7 +10,7 @@ import {
 
 router.post("/add-supervisor", AddSupervisor);
 
-router.post("/login-supervisor", loginSupervisor);
+router.post("/login-supervisor", limiter, loginSupervisor);
 
 router.post("/announcementtoawws", sendAnnoucementToAwws);
 

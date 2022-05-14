@@ -32,32 +32,27 @@ export const registerAdmin = (req, res) => {
   });
 };
 
-export const loginAdmin = (req, res) => {
+export const loginAdmin = async (req, res) => {
   var email = req.body.email;
   var pword = req.body.password;
 
-  // ownerDebugger(email);
-  // ownerDebugger(password);
+  const result = await Admin.findOne({ user_name: email });
 
-  Admin.findOne({ user_name: email }, (err, docs) => {
-    if (docs) {
-      bcrypt.compare(pword, docs.password, function (err, result) {
-        // result == true
-        if (!err) {
-          const user = { user_name: docs.user_name };
-          adminDebugger(user);
-          const accessToken = generateAccessToken(user);
-          res.json({ accessToken: accessToken, user_name: docs.user_name });
-          adminDebugger("Login Success");
-          // res.send(docs);
-        } else {
-          res.send({ message: "Username and Password missmatch ." });
-        }
+  if (!result) res.status(401).send({ message: "Admin Not registered." });
+  else {
+    const match = await bcrypt.compare(pword, result.password);
+
+    if (match) {
+      const user = { user_name: result.user_name };
+      adminDebugger(user);
+      const accessToken = generateAccessToken(user);
+      res.json({
+        accessToken: accessToken,
+        user_name: result.user_name,
       });
+      adminDebugger("Login Success");
     } else {
-      // mongoose.connection.close();
-      res.status(401).send({ message: "HouseOwner Not registered." });
-      // mongoose.connection.close();
+      res.status(401).send({ message: "Username and Password missmatch ." });
     }
-  });
+  }
 };

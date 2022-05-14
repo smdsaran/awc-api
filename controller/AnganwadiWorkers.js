@@ -67,38 +67,30 @@ export const AddAWW = async (req, res) => {
 
 //////////////////////////  Login AWW    //////////////////////////////////
 
-export const loginAWW = (req, res) => {
+export const loginAWW = async (req, res) => {
   var user_id = req.body.user_id;
   var pword = req.body.password;
 
-  // ownerDebugger(email);
-  // ownerDebugger(password);
+  const result = await AnganwadiWorkers.findOne({ user_id: user_id });
 
-  AnganwadiWorkers.findOne({ user_id: user_id }, (err, docs) => {
-    if (docs) {
-      bcrypt.compare(pword, docs.password, function (err, result) {
-        // result == true
-        if (!err) {
-          const user = { email: docs.email };
-          adminDebugger(user);
-          const accessToken = generateAccessToken(user);
-          res.json({
-            accessToken: accessToken,
-            code: docs.centerCode,
-            user_id: docs.user_id,
-          });
-          adminDebugger("Login Success");
-          // res.send(docs);
-        } else {
-          res.send({ message: "Username and Password missmatch ." });
-        }
+  if (!result) res.status(401).send({ message: "AWW Not registered." });
+  else {
+    const match = await bcrypt.compare(pword, result.password);
+
+    if (match) {
+      const user = { email: result.email };
+      adminDebugger(user);
+      const accessToken = generateAccessToken(user);
+      res.json({
+        accessToken: accessToken,
+        code: result.centerCode,
+        user_id: result.user_id,
       });
+      adminDebugger("Login Success");
     } else {
-      // mongoose.connection.close();
-      res.status(401).send({ message: "HouseOwner Not registered." });
-      // mongoose.connection.close();
+      res.status(401).send({ message: "Username and Password missmatch ." });
     }
-  });
+  }
 };
 
 //////////////////////////////////   Get a Mobile Number/////////////////////////
