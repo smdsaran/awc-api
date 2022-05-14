@@ -54,6 +54,19 @@ export const AllAWC = async (req, res) => {
   if (!results) res.send("No AWC.");
   else res.send(results);
 };
+
+////////////////////////////////   Read Single AWC   /////////////////////////
+export const readAWC = async (req, res) => {
+  const { centerCode } = req.params;
+
+  const results = await AnganwadiCenters.findOne({
+    centerCode: centerCode,
+  }).select("streetOrArea cityOrVillage pincode district state");
+
+  if (!results) res.send("No AWC.");
+  else res.send(results);
+};
+
 ////////////////////////////////    Add Children ///////////////////////////////
 
 export const AddChildren = async (req, res) => {

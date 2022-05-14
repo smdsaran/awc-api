@@ -6,6 +6,7 @@ import upload from "../methods/Multer.js";
 import {
   AllAWC,
   addAWC,
+  readAWC,
   AddChildren,
   ReadChidren,
   searchChildren,
@@ -28,7 +29,7 @@ import {
 } from "../controller/AnganwadiCenters.js";
 
 router.get("/all-awc/:divisionCode", AllAWC);
-
+router.get("/readAWC/:centerCode", readAWC);
 router.post("/add-awc", addAWC);
 
 router.post("/add-child", AddChildren);
