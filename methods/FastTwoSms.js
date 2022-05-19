@@ -4,6 +4,8 @@ import fast2sms from "fast-two-sms";
 // var options = {authorization : process.env.FAST_TWO_SMS_API , message : 'YOUR_MESSAGE_HERE' ,  numbers : ['9999999999','8888888888']}
 
 const sendFastTwoFastSMS = (body, number) => {
+  console.log("SMS Function");
+
   fast2sms
     .sendMessage({
       authorization: process.env.FAST_TWO_SMS_API,

@@ -2,6 +2,7 @@ import ComplaintOrRequest from "../model/ComplaintOrRequest.js";
 import Supervisor from "../model/Supervisor.js";
 // import sendSMS from "../methods/TwilioSMS.js";
 import sendFastTwoFastSMS from "../methods/FastTwoSms.js";
+import sendEmail from "../methods/NodeMailer.js";
 
 ///////////////// Add Complaint ////////////////////
 
@@ -29,7 +30,7 @@ export const AddComplaintOrRequest = async (req, res) => {
 
     const supervisorNum = await Supervisor.findOne({
       divisionCode: divisionCode,
-    }).select("mobile_no");
+    }).select("mobile_no email");
 
     console.log(supervisorNum);
 
@@ -39,6 +40,11 @@ export const AddComplaintOrRequest = async (req, res) => {
         "Complaint or Request Arrived. Login and Take an Action.",
         supervisorNum.mobile_no
       );
+
+    sendEmail(
+      "Complaint or Request Arrived. Login and Take an Action.",
+      supervisorNum.email
+    );
   } else res.send("Something Went Wrong");
 };
 

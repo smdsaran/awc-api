@@ -2,13 +2,20 @@ import LeaveRequest from "../model/LeaveRequest.js";
 import mongoose from "mongoose";
 // import sendSMS from "../methods/TwilioSMS.js";
 import sendFastTwoFastSMS from "../methods/FastTwoSms.js";
+import sendEmail from "../methods/NodeMailer.js";
 import Supervisor from "../model/Supervisor.js";
 
 ////////////////////////////////////  Leave Request /////////////////////
 
 export const RequestLeave = async (req, res) => {
-  const { centerCode, divisionCode, workerName, workerNumber, reason } =
-    req.body;
+  const {
+    centerCode,
+    divisionCode,
+    workerName,
+    workerNumber,
+    workerEmail,
+    reason,
+  } = req.body;
 
   console.log(req.body);
 
@@ -17,6 +24,7 @@ export const RequestLeave = async (req, res) => {
     divisionCode,
     workerName,
     workerNumber,
+    workerEmail,
     reason,
   });
 
@@ -27,7 +35,7 @@ export const RequestLeave = async (req, res) => {
 
     const supervisorNum = await Supervisor.findOne({
       divisionCode: divisionCode,
-    }).select("mobile_no");
+    }).select("mobile_no email");
 
     console.log(supervisorNum);
 
@@ -37,6 +45,11 @@ export const RequestLeave = async (req, res) => {
         "Leave Request Arrived. Login and Take an Action.",
         supervisorNum.mobile_no
       );
+
+    sendEmail(
+      "Leave Request Arrived. Login and Take an Action.",
+      supervisorNum.email
+    );
   } else res.send("Something Went Wrong");
 };
 
@@ -51,8 +64,10 @@ export const ViewLeaveRequest = async (req, res) => {
 
 /////////////////////////// Delete Request ////////////////////////////////
 export const LeaveRequestResponse = async (req, res) => {
-  const { leaveResponse, number } = req.body; // number should be string
+  const { leaveResponse, number, email } = req.body; // number should be string
   const id = req.body.id;
+
+  console.log(email);
 
   const result = await LeaveRequest.deleteOne({ _id: id });
 
@@ -69,9 +84,20 @@ export const LeaveRequestResponse = async (req, res) => {
 
   if (leaveResponse === "Accept") {
     sendFastTwoFastSMS("This is from AWC. Your Leave Request Accepted", number);
+    sendEmail(
+      "This is from AWC. Your Leave Request Accepted by Supervisor.",
+      email
+    );
   }
 
   if (leaveResponse === "Deny") {
-    sendFastTwoFastSMS("This is from AWC. Your Leave Request Denied", number);
+    sendFastTwoFastSMS(
+      "This is from AWC. Your Leave Request Denied by Supervisor.",
+      number
+    );
+    sendEmail(
+      "This is from AWC. Your Leave Request Denied by Supervisor.",
+      email
+    );
   }
 };

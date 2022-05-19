@@ -21,6 +21,11 @@ const leaveRequestSchema = new mongoose.Schema({
     required: true,
   },
 
+  workerEmail: {
+    type: String,
+    required: true,
+  },
+
   reason: {
     type: String,
     required: true,

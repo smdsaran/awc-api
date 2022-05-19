@@ -1,6 +1,7 @@
 import Supervisors from "../model/Supervisor.js";
 import AnganwadiWorkers from "../model/AnganwadiWorkers.js";
 import sendFastTwoFastSMS from "../methods/FastTwoSms.js";
+import sendEmail from "../methods/NodeMailer.js";
 import bcrypt from "bcrypt";
 const saltRounds = 10;
 import { generateAccessToken } from "../methods/Auth.js";
@@ -98,7 +99,7 @@ export const sendAnnoucementToAwws = async (req, res) => {
 
   const results = await AnganwadiWorkers.find({
     divisionCode: divisionCode,
-  }).select("mobile_no");
+  }).select("mobile_no email");
 
   console.log(results);
 
@@ -107,5 +108,7 @@ export const sendAnnoucementToAwws = async (req, res) => {
 
   results.forEach((result) => {
     sendFastTwoFastSMS(decrypt(body), result.mobile_no);
+
+    sendEmail(decrypt(body), result.email);
   });
 };

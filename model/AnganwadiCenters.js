@@ -18,7 +18,6 @@ const anganwadiCentersSchema = new mongoose.Schema({
 
   streetOrArea: {
     type: String,
-    required: true,
   },
 
   cityOrVillage: {
