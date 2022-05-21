@@ -6,8 +6,17 @@ import mongoose from "mongoose";
 //////////////////////////////////  Add AWC //////////////////////////////////
 
 export const addAWC = async (req, res) => {
-  const { centerCode, divisionCode, pincode, cityOrVillage, district, state } =
-    req.body;
+  const {
+    centerCode,
+    divisionCode,
+    pincode,
+    latitude,
+    longitude,
+    streetOrArea,
+    cityOrVillage,
+    district,
+    state,
+  } = req.body;
 
   const found = await AnganwadiCenters.findOne({ centerCode: centerCode });
 
@@ -16,6 +25,9 @@ export const addAWC = async (req, res) => {
       centerCode,
       divisionCode,
       pincode,
+      latitude,
+      longitude,
+      streetOrArea,
       cityOrVillage,
       district,
       state,
@@ -32,6 +44,9 @@ export const addAWC = async (req, res) => {
         centerCode,
         divisionCode,
         pincode,
+        latitude,
+        longitude,
+        streetOrArea,
         cityOrVillage,
         district,
         state,
@@ -467,18 +482,24 @@ export const ReadAttendanceEntry = async (req, res) => {
   else if (days === "Last 3 Months") limit = 90;
   else limit = 365;
 
-  const result = await AnganwadiCenters.find({ centerCode: centerCode })
-    .select("attendanceEntry")
-    .sort({ _id: -1 });
+  const result = await AnganwadiCenters.findOne({
+    centerCode: centerCode,
+  }).select("attendanceEntry latitude longitude");
+  // .sort({ _id: -1 });
   // .limit(limit);
 
-  // console.log(result[0]);
+  // console.log(result);
 
-  let ans = result[0].attendanceEntry.reverse();
-
+  let ans = result.attendanceEntry.reverse();
   let filteredData = ans.slice(0, limit);
 
-  result ? res.send(filteredData) : res.send("Something Wrong");
+  let data = {
+    attendance: filteredData,
+    latitude: result.latitude,
+    longitude: result.longitude,
+  };
+
+  result ? res.send(data) : res.send("Something Wrong");
 };
 
 //////////////////////////////////// Add Stock Details ////////////////////////////////

@@ -6,6 +6,7 @@ import { generateAccessToken } from "../methods/Auth.js";
 import debug from "debug";
 const adminDebugger = debug("app:admin");
 import sendFastTwoFastSMS from "../methods/FastTwoSms.js";
+import sendSMS from "../methods/TwilioSMS.js";
 import decrypt from "../methods/Crypto.js";
 import CryptoJS from "crypto-js";
 ///////////////////////  Add AWW //////////////////////
@@ -117,24 +118,20 @@ export const sendAnnouncement = async (req, res) => {
   var bytes = CryptoJS.AES.decrypt(body, "secret key 123");
   var originalText = bytes.toString(CryptoJS.enc.Utf8);
 
-  // const encryptedText = decrypt(body);
-
-  // console.log(encryptedText);
-
   const result = await AnganwadiCenters.findOne({
     centerCode: centerCode,
   }).select("pregnantLadies");
 
-  // console.log(result);
+  if (!result) res.send("No Resipients Available.");
+  else {
+    result.pregnantLadies.forEach((lady) => {
+      sendSMS(originalText, `+91${lady.mobile_no}`);
 
-  if (result) res.send("Announcement Sent");
-  else res.send("No Resipients Available.");
+      sendFastTwoFastSMS(originalText, lady.mobile_no);
+    });
 
-  result.pregnantLadies.forEach((lady) => {
-    sendSMS(originalText, `+91${lady.mobile_no}`);
-
-    sendFastTwoFastSMS(originalText, lady.mobile_no);
-  });
+    res.send("Announcement Sent");
+  }
 };
 
 ////////////////////////////////   Read AWWs   /////////////////////////////////////////
