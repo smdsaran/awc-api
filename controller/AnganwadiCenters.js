@@ -1,7 +1,7 @@
 import AnganwadiCenters from "../model/AnganwadiCenters.js";
 import sendSMS from "../methods/TwilioSMS.js";
 import sendFastTwoFastSMS from "../methods/FastTwoSms.js";
-import mongoose from "mongoose";
+import BMI from "../methods/BMI.js";
 
 //////////////////////////////////  Add AWC //////////////////////////////////
 
@@ -99,8 +99,10 @@ export const AddChildren = async (req, res) => {
   } = req.body;
 
   console.log(req.body);
+
+  let bmi = BMI(weight, height);
   // const file = req.file;
-  // console.log(file);
+  console.log(bmi);
 
   // let photo = file.originalname;
 
@@ -114,12 +116,13 @@ export const AddChildren = async (req, res) => {
     address,
     height,
     weight,
+    bmi,
     // photo,
   };
 
   const result = await AnganwadiCenters.findOne({ centerCode: centerCode });
 
-  console.log(result);
+  // console.log(result);
 
   if (result) {
     result.children.push(child);
@@ -205,6 +208,10 @@ export const EditChildren = async (req, res) => {
 
   console.log(req.body);
 
+  let bmi = BMI(weight, height);
+
+  console.log(bmi);
+
   // const id = mongoose.Types.ObjectId(req.body.id);
 
   const query = {
@@ -223,6 +230,7 @@ export const EditChildren = async (req, res) => {
       "children.$.address": address,
       "children.$.height": height,
       "children.$.weight": weight,
+      "children.$.bmi": bmi,
     },
   })
     .then(() => res.send("Updated Sucessfully."))

@@ -105,6 +105,10 @@ const anganwadiCentersSchema = new mongoose.Schema({
         required: true,
       },
 
+      bmi: {
+        type: String,
+      },
+
       // photo: {
       //   type: String,
       //   required: true,
