@@ -111,26 +111,44 @@ export const getMobNum = async (req, res) => {
 ////////////////////////////////////   Announcement ///////////////////////////////////////
 
 export const sendAnnouncement = async (req, res) => {
-  const { centerCode, body } = req.body;
+  const { centerCode, body, sendTo } = req.body;
 
   console.log(body);
 
   var bytes = CryptoJS.AES.decrypt(body, "secret key 123");
   var originalText = bytes.toString(CryptoJS.enc.Utf8);
 
-  const result = await AnganwadiCenters.findOne({
-    centerCode: centerCode,
-  }).select("pregnantLadies");
+  if (sendTo === "PLadies") {
+    const result = await AnganwadiCenters.findOne({
+      centerCode: centerCode,
+    }).select("pregnantLadies");
 
-  if (!result) res.send("No Resipients Available.");
-  else {
-    result.pregnantLadies.forEach((lady) => {
-      sendSMS(originalText, `+91${lady.mobile_no}`);
+    if (!result) res.send("No Resipients Available.");
+    else {
+      result.pregnantLadies.forEach((lady) => {
+        sendSMS(originalText, `+91${lady.mobile_no}`);
 
-      sendFastTwoFastSMS(originalText, lady.mobile_no);
-    });
+        sendFastTwoFastSMS(originalText, lady.mobile_no);
+      });
 
-    res.send("Announcement Sent");
+      res.send("Announcement Sent");
+    }
+  } else {
+    const result = await AnganwadiCenters.findOne({
+      centerCode: centerCode,
+    }).select("children");
+
+    if (!result) res.send("No Resipients Available.");
+    else {
+      result.children.forEach((child) => {
+        let text = `${originalText}Your Child BMI is ${child.bmi}.`;
+        sendSMS(text, `+91${child.mobile_no}`);
+
+        sendFastTwoFastSMS(text, child.mobile_no);
+      });
+
+      res.send("Announcement Sent");
+    }
   }
 };
 
