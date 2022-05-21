@@ -127,6 +127,8 @@ export const sendAnnouncement = async (req, res) => {
   else res.send("No Resipients Available.");
 
   result.pregnantLadies.forEach((lady) => {
+    sendSMS(decrypt(body), `+91${lady.mobile_no}`);
+
     sendFastTwoFastSMS(decrypt(body), lady.mobile_no);
   });
 };
