@@ -540,11 +540,11 @@ export const addStockDetails = async (req, res) => {
     },
 
     existing: {
-      oilInLitre: "",
-      pulseInKg: "",
-      nutritionFlourInPacket: "",
-      eggInNum: "",
-      riceInKg: "",
+      oilInLitre,
+      pulseInKg,
+      nutritionFlourInPacket,
+      eggInNum,
+      riceInKg,
     },
   };
 
