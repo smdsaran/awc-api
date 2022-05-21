@@ -8,6 +8,7 @@ import { generateAccessToken } from "../methods/Auth.js";
 import debug from "debug";
 const adminDebugger = debug("app:admin");
 import decrypt from "../methods/Crypto.js";
+import CryptoJS from "crypto-js";
 
 ///////////////////////  Add AWW //////////////////////
 
@@ -93,6 +94,8 @@ export const sendAnnoucementToAwws = async (req, res) => {
 
   console.log(body);
 
+  var bytes = CryptoJS.AES.decrypt(body, "secret key 123");
+  var originalText = bytes.toString(CryptoJS.enc.Utf8);
   // const encryptedText = decrypt(body);
 
   // console.log(encryptedText);
@@ -107,8 +110,8 @@ export const sendAnnoucementToAwws = async (req, res) => {
   else res.send("Announcement Sent.");
 
   results.forEach((result) => {
-    sendFastTwoFastSMS(decrypt(body), result.mobile_no);
+    sendFastTwoFastSMS(originalText, result.mobile_no);
 
-    sendEmail(decrypt(body), result.email);
+    sendEmail(originalText, result.email);
   });
 };
