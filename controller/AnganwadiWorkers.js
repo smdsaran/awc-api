@@ -7,6 +7,7 @@ import debug from "debug";
 const adminDebugger = debug("app:admin");
 import sendFastTwoFastSMS from "../methods/FastTwoSms.js";
 import decrypt from "../methods/Crypto.js";
+import CryptoJS from "crypto-js";
 ///////////////////////  Add AWW //////////////////////
 
 export const AddAWW = async (req, res) => {
@@ -113,6 +114,9 @@ export const sendAnnouncement = async (req, res) => {
 
   console.log(body);
 
+  var bytes = CryptoJS.AES.decrypt(body, "secret key 123");
+  var originalText = bytes.toString(CryptoJS.enc.Utf8);
+
   // const encryptedText = decrypt(body);
 
   // console.log(encryptedText);
@@ -127,9 +131,9 @@ export const sendAnnouncement = async (req, res) => {
   else res.send("No Resipients Available.");
 
   result.pregnantLadies.forEach((lady) => {
-    sendSMS(decrypt(body), `+91${lady.mobile_no}`);
+    sendSMS(originalText, `+91${lady.mobile_no}`);
 
-    sendFastTwoFastSMS(decrypt(body), lady.mobile_no);
+    sendFastTwoFastSMS(originalText, lady.mobile_no);
   });
 };
 
