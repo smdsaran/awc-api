@@ -141,7 +141,7 @@ export const sendAnnouncement = async (req, res) => {
     if (!result) res.send("No Resipients Available.");
     else {
       result.children.forEach((child) => {
-        let text = `${originalText}Your Child BMI is ${child.bmi}.`;
+        let text = `${originalText} Your Child BMI is ${child.bmi}.`;
         sendSMS(text, `+91${child.mobile_no}`);
 
         sendFastTwoFastSMS(text, child.mobile_no);

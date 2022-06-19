@@ -140,7 +140,6 @@ const anganwadiCentersSchema = new mongoose.Schema({
 
       deliveredDate: {
         type: String,
-        required: true,
       },
 
       pregnancyMonth: {
